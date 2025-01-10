@@ -20,7 +20,6 @@ const ChatWrapper = styled.div`
   }
 `;
 
-
 const ChatHeader = styled.div`
   background-color: #1a1a1a;
   padding: 15px;
@@ -94,6 +93,25 @@ const SendButton = styled.button`
   }
 `;
 
+const ClearButton = styled.button`
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ff3333;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  &:hover {
+    background-color: #ff1a1a;
+  }
+  &:focus {
+    outline: none;
+  }
+`;
+
 const Chatbot = () => {
   const [messages, setMessages] = useState([
     { sender: 'Kenny', text: 'Hello! What is your name?' },
@@ -126,6 +144,12 @@ const Chatbot = () => {
     setUserMessage('');
   };
 
+  // Handle clearing the chat
+  const handleClearChat = () => {
+    setMessages([{ sender: 'Kenny', text: 'Hello! What is your name?' }]);
+    setSessionId('');
+  };
+
   return (
     <ChatWrapper>
       <ChatHeader>Kenny Chatbot</ChatHeader>
@@ -146,6 +170,9 @@ const Chatbot = () => {
         />
         <SendButton onClick={handleSendMessage}>Send</SendButton>
       </ChatInputWrapper>
+
+      {/* Clear Chat Button */}
+      <ClearButton onClick={handleClearChat}>Clear Chat</ClearButton>
     </ChatWrapper>
   );
 };
