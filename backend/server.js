@@ -30,7 +30,7 @@ app.post('/chat', (req, res) => {
   // Check the current conversation step
   switch (conversation.step) {
     case 1:
-      reply = 'Hello! What is your name?';
+      reply = 'What is your name?';
       conversation.step = 2;
       break;
     case 2:

@@ -146,7 +146,7 @@ const Chatbot = () => {
 
   // Handle clearing the chat
   const handleClearChat = () => {
-    setMessages([{ sender: 'Kenny', text: 'Hello! What is your name?' }]);
+    setMessages([{ sender: 'Kenny', text: 'Hello!' }]);
     setSessionId('');
   };
 
