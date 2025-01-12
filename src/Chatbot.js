@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-// Styled Components for UI
+// Styled Components for UI.
 const ChatWrapper = styled.div`
   width: 350px;
   height: 500px;
