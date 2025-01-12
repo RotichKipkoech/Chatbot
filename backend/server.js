@@ -30,19 +30,19 @@ app.post('/chat', (req, res) => {
   // Check the current conversation step
   switch (conversation.step) {
     case 1:
-      reply = 'What is your name?';
+      reply = `Nice to meet you, ${userMessage}! How old are you?`;
       conversation.step = 2;
       break;
     case 2:
-      reply = `Nice to meet you, ${userMessage}! How old are you?`;
+      reply = `Wow, ${userMessage} years old! What is your favorite hobby?`;
       conversation.step = 3;
       break;
     case 3:
-      reply = `Wow, ${userMessage} years old! What is your favorite hobby?`;
+      reply = `That sounds like a lot of fun! Where do you leave?`;
       conversation.step = 4;
       break;
     case 4:
-      reply = `That sounds like a lot of fun! Thanks for sharing, ${conversation.name}. It was nice talking to you!`;
+      reply = ` ${userMessage} is a good place! Thanks for sharing, ${conversation.name}. It was nice talking to you!`;
       conversation.step = 1;  // Reset the conversation flow
       break;
     default:
