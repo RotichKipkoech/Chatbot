@@ -51,7 +51,7 @@ app.post('/chat', (req, res) => {
 
   // Update the conversation state with the user's answer
   if (conversation.step === 2) {
-    conversation.name = userMessage;  // Store the user's name for personalized responses
+    conversation.name = userMessage;  // Store the user's response for personalized responses
   }
 
   res.json({ reply, sessionId });
