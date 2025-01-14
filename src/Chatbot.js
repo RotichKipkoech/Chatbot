@@ -1,7 +1,9 @@
+// Chatbot.js
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-// Styled Components for UI.
+// Styled Components for UI
 const ChatWrapper = styled.div`
   width: 350px;
   height: 500px;
@@ -91,6 +93,10 @@ const SendButton = styled.button`
   &:focus {
     outline: none;
   }
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
 `;
 
 const ClearButton = styled.button`
@@ -112,33 +118,52 @@ const ClearButton = styled.button`
   }
 `;
 
+const LoadingIndicator = styled.div`
+  font-size: 16px;
+  color: #ffa500;
+  padding: 10px;
+  text-align: center;
+`;
+
 const Chatbot = () => {
   const [messages, setMessages] = useState([
     { sender: 'Kenny', text: 'Hello! What is your name?' },
   ]);
   const [userMessage, setUserMessage] = useState('');
   const [sessionId, setSessionId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSendMessage = async () => {
-    if (!userMessage.trim()) return;
+    if (!userMessage.trim() || isLoading) return;  // Prevent multiple requests
 
     // Add user's message to the chat
     setMessages([...messages, { sender: 'User', text: userMessage }]);
     
-    // Send message to the backend and get a response
-    const response = await fetch('http://localhost:5000/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: userMessage, sessionId: sessionId }),
-    });
+    // Set loading state while waiting for response
+    setIsLoading(true);
 
-    const data = await response.json();
+    try {
+      const response = await fetch('https://your-backend-service.onrender.com/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage, sessionId: sessionId }),
+      });
 
-    // Display the response from Kenny
-    setMessages([...messages, { sender: 'User', text: userMessage }, { sender: 'Kenny', text: data.reply }]);
+      if (!response.ok) throw new Error('Failed to get response from server');
+      
+      const data = await response.json();
 
-    // Update the sessionId for next user input
-    setSessionId(data.sessionId);
+      // Display the response from Kenny
+      setMessages([...messages, { sender: 'User', text: userMessage }, { sender: 'Kenny', text: data.reply }]);
+
+      // Update the sessionId for next user input
+      setSessionId(data.sessionId);
+    } catch (error) {
+      setMessages([...messages, { sender: 'User', text: userMessage }, { sender: 'Kenny', text: 'Sorry, there was an error. Please try again.' }]);
+      console.error('Error fetching from backend:', error);
+    } finally {
+      setIsLoading(false);  // Reset loading state
+    }
 
     // Clear the input field
     setUserMessage('');
@@ -159,6 +184,7 @@ const Chatbot = () => {
             <MessageBubble sender={message.sender}>{message.text}</MessageBubble>
           </ChatMessage>
         ))}
+        {isLoading && <LoadingIndicator>Loading...</LoadingIndicator>}
       </ChatBody>
 
       <ChatInputWrapper>
@@ -168,7 +194,7 @@ const Chatbot = () => {
           onChange={(e) => setUserMessage(e.target.value)}
           placeholder="Type your answer here"
         />
-        <SendButton onClick={handleSendMessage}>Send</SendButton>
+        <SendButton onClick={handleSendMessage} disabled={isLoading}>Send</SendButton>
       </ChatInputWrapper>
 
       {/* Clear Chat Button */}
