@@ -1,0 +1,5 @@
+services:
+  - type: static_site
+    name: chatbot
+    buildCommand: "npm run build"
+    publishDirectory: "build"
